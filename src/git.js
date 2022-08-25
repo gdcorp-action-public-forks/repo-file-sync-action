@@ -16,6 +16,7 @@ const {
 	COMMIT_PREFIX,
 	GITHUB_REPOSITORY,
 	OVERWRITE_EXISTING_PR,
+	SKIP_PR,
 	PR_BODY,
 	BRANCH_PREFIX,
 	FORK
@@ -159,6 +160,8 @@ class Git {
 		return `\n${ string }`.split('\ndiff --git').slice(1).reduce((resultDict, fileDiff) => {
 			const lines = fileDiff.split('\n')
 			const lastHeaderLineIndex = lines.findIndex((line) => line.startsWith('+++'))
+			if (lastHeaderLineIndex === -1) return resultDict // ignore binary files
+
 			const plainDiff = lines.slice(lastHeaderLineIndex + 1).join('\n').trim()
 			let filePath = ''
 			if (lines[lastHeaderLineIndex].startsWith('+++ b/')) { // every file except removed files
@@ -288,7 +291,7 @@ class Git {
 	// Gets the commit list in chronological order
 	async getCommitsToPush() {
 		const output = await execCmd(
-			`git log --format=%H --reverse ${ this.baseBranch }..HEAD`,
+			`git log --format=%H --reverse ${ SKIP_PR === false ? `` : `origin/` }${ this.baseBranch }..HEAD`,
 			this.workingDir
 		)
 
@@ -323,30 +326,32 @@ class Git {
 	async createGithubVerifiedCommits() {
 		const commitsData = await this.getCommitsDataToPush()
 
-		// Creates the PR branch if doesn't exists
-		try {
-			await this.github.git.createRef({
-				owner: this.repo.user,
-				repo: this.repo.name,
-				sha: this.lastCommitSha,
-				ref: 'refs/heads/' + this.prBranch
-			})
+		if (SKIP_PR === false) {
+			// Creates the PR branch if doesn't exists
+			try {
+				await this.github.git.createRef({
+					owner: this.repo.user,
+					repo: this.repo.name,
+					sha: this.lastCommitSha,
+					ref: 'refs/heads/' + this.prBranch
+				})
 
-			core.debug(`Created new branch ${ this.prBranch }`)
-		} catch (error) {
-			// If the branch exists ignores the error
-			if (error.message !== 'Reference already exists') throw error
+				core.debug(`Created new branch ${ this.prBranch }`)
+			} catch (error) {
+				// If the branch exists ignores the error
+				if (error.message !== 'Reference already exists') throw error
+			}
 		}
 
 		for (const commitData of commitsData) {
 			await this.createGithubTreeAndCommit(commitData.tree, commitData.commitMessage)
 		}
 
-		core.debug(`Updating branch ${ this.prBranch } ref`)
+		core.debug(`Updating branch ${ SKIP_PR === false ? this.prBranch : this.baseBranch } ref`)
 		await this.github.git.updateRef({
 			owner: this.repo.user,
 			repo: this.repo.name,
-			ref: `heads/${ this.prBranch }`,
+			ref: `heads/${ SKIP_PR === false ? this.prBranch : this.baseBranch }`,
 			sha: this.lastCommitSha,
 			force: true
 		})
