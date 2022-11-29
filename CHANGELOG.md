@@ -1,3 +1,25 @@
+## [v1.18.0] - 2022-11-18
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.18.0) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.17.22...v1.18.0) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.18.0) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.18.0.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.18.0.tar.gz))
+
+### New features
+
+- [`a2677cb`](https://github.com/betahuhn/repo-file-sync-action/commit/a2677cb)  Add support for compiling Jinja-style templates with Nunjucks in sync process (#271)
+(Issues: [`#271`](https://github.com/betahuhn/repo-file-sync-action/issues/271))
+
+### Bug fixes
+
+- [`ed3f645`](https://github.com/betahuhn/repo-file-sync-action/commit/ed3f645)  Fix lint errors
+
+## [v1.17.22] - 2022-10-24
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.17.22) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.17.21...v1.17.22) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.17.22) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.17.22.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.17.22.tar.gz))
+
+### Security issues
+
+- [`56ab275`](https://github.com/betahuhn/repo-file-sync-action/commit/56ab275)  Update action to use node v16 (#261)
+(Issues: [`#261`](https://github.com/betahuhn/repo-file-sync-action/issues/261))
+
 ## [v1.17.21] - 2022-08-24
 
 [Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.17.21) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.17.20...v1.17.21) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.17.21) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.17.21.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.17.21.tar.gz))
