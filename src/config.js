@@ -1,8 +1,8 @@
-const core = require('@actions/core')
-const yaml = require('js-yaml')
-const fs = require('fs-extra')
-const path = require('path')
-const { getInput } = require('action-input-parser')
+import * as core from '@actions/core'
+import * as yaml from 'js-yaml'
+import * as fs from 'fs-extra'
+import * as path from 'path'
+import { getInput } from 'action-input-parser'
 
 const REPLACE_DEFAULT = true
 const TEMPLATE_DEFAULT = false
@@ -30,6 +30,7 @@ try {
 
 	context = {
 		GITHUB_TOKEN: token,
+		GITHUB_SERVER_URL: process.env.GITHUB_SERVER_URL || 'https://github.com',
 		IS_INSTALLATION_TOKEN: isInstallationToken,
 		GIT_EMAIL: getInput({
 			key: 'GIT_EMAIL'
@@ -144,7 +145,7 @@ try {
 }
 
 const parseRepoName = (fullRepo) => {
-	let host = 'github.com'
+	let host = new URL(context.GITHUB_SERVER_URL).host
 
 	if (fullRepo.startsWith('http')) {
 		const url = new URL(fullRepo)
@@ -197,7 +198,7 @@ const parseFiles = (files) => {
 	})
 }
 
-const parseConfig = async () => {
+export async function parseConfig() {
 	const fileContent = await fs.promises.readFile(context.CONFIG_PATH)
 
 	const configObject = yaml.load(fileContent.toString())
@@ -247,7 +248,4 @@ const parseConfig = async () => {
 	return Object.values(result)
 }
 
-module.exports = {
-	...context,
-	parseConfig
-}
+export default context

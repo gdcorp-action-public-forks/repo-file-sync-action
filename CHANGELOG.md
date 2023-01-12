@@ -1,3 +1,56 @@
+## [v1.21.0] - 2023-01-10
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.21.0) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.20.2...v1.21.0) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.21.0) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.21.0.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.21.0.tar.gz))
+
+### New features
+
+- [`5c87303`](https://github.com/betahuhn/repo-file-sync-action/commit/5c87303)  Add GHES support (#291)
+(Issues: [`#291`](https://github.com/betahuhn/repo-file-sync-action/issues/291))
+
+## [v1.20.2] - 2023-01-10
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.20.2) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.20.1...v1.20.2) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.20.2) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.20.2.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.20.2.tar.gz))
+
+### Updates
+
+- [`bd5425a`](https://github.com/betahuhn/repo-file-sync-action/commit/bd5425a)  Make messages compatible with conventional commits (#290)
+(Issues: [`#290`](https://github.com/betahuhn/repo-file-sync-action/issues/290))
+
+## [v1.20.1] - 2023-01-09
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.20.1) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.20.0...v1.20.1) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.20.1) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.20.1.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.20.1.tar.gz))
+
+### Bug fixes
+
+- [`7f7a929`](https://github.com/betahuhn/repo-file-sync-action/commit/7f7a929)  Fix esm imports
+
+## [v1.20.0] - 2023-01-07
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.20.0) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.19.1...v1.20.0) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.20.0) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.20.0.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.20.0.tar.gz))
+
+### New features
+
+- [`eb95ce4`](https://github.com/betahuhn/repo-file-sync-action/commit/eb95ce4)  Add possibility to exclude subfolders from synced folders (#274)
+(Issues: [`#274`](https://github.com/betahuhn/repo-file-sync-action/issues/274))
+
+### Updates
+
+- [`6f1bf85`](https://github.com/betahuhn/repo-file-sync-action/commit/6f1bf85)  Move to ESM (#288)
+(Issues: [`#288`](https://github.com/betahuhn/repo-file-sync-action/issues/288))
+
+### Bug fixes
+
+- [`d2b8086`](https://github.com/betahuhn/repo-file-sync-action/commit/d2b8086)  Fix linting and exclude
+
+## [v1.19.1] - 2023-01-07
+
+[Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.19.1) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.19.0...v1.19.1) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.19.1) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.19.1.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.19.1.tar.gz))
+
+### Bug fixes
+
+- [`5212d28`](https://github.com/betahuhn/repo-file-sync-action/commit/5212d28)  Ignore &#x60;.git&#x60; folder when checking orphaned files (#287)
+(Issues: [`#287`](https://github.com/betahuhn/repo-file-sync-action/issues/287))
+
 ## [v1.19.0] - 2022-11-30
 
 [Release notes](https://github.com/betahuhn/repo-file-sync-action/releases/tag/v1.19.0) · [Compare](https://github.com/betahuhn/repo-file-sync-action/compare/v1.18.0...v1.19.0) · [Tag](https://github.com/betahuhn/repo-file-sync-action/tree/v1.19.0) · Archive ([zip](https://github.com/betahuhn/repo-file-sync-action/archive/v1.19.0.zip) · [tar.gz](https://github.com/betahuhn/repo-file-sync-action/archive/v1.19.0.tar.gz))

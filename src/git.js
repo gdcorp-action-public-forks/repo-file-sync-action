@@ -1,13 +1,16 @@
-const { parse } = require('@putout/git-status-porcelain')
-const core = require('@actions/core')
-const github = require('@actions/github')
-const { GitHub, getOctokitOptions } = require('@actions/github/lib/utils')
-const { throttling } = require('@octokit/plugin-throttling')
-const path = require('path')
-const fs = require('fs')
+import { parse } from '@putout/git-status-porcelain'
+import * as core from '@actions/core'
+import * as github from '@actions/github'
+import { GitHub, getOctokitOptions } from '@actions/github/lib/utils.js'
+import { throttling } from '@octokit/plugin-throttling'
+import * as path from 'path'
+import * as fs from 'fs/promises'
+
+import config from './config.js'
 
 const {
 	GITHUB_TOKEN,
+	GITHUB_SERVER_URL,
 	IS_INSTALLATION_TOKEN,
 	IS_FINE_GRAINED,
 	GIT_USERNAME,
@@ -21,15 +24,16 @@ const {
 	PR_BODY,
 	BRANCH_PREFIX,
 	FORK
-} = require('./config')
+} = config
 
-const { dedent, execCmd } = require('./helpers')
+import { dedent, execCmd } from './helpers.js'
 
-class Git {
+export default class Git {
 	constructor() {
 		const Octokit = GitHub.plugin(throttling)
 
 		const options = getOctokitOptions(GITHUB_TOKEN, {
+			baseUrl: process.env.GITHUB_API_URL || 'https://api.github.com',
 			throttle: {
 				onRateLimit: (retryAfter) => {
 					core.debug(`Hit GitHub API rate limit, retrying after ${ retryAfter }s`)
@@ -65,9 +69,11 @@ class Git {
 		await this.getLastCommitSha()
 
 		if (FORK) {
-			const forkUrl = `https://${ GITHUB_TOKEN }@github.com/${ FORK }/${ this.repo.name }.git`
+			const forkUrl = new URL(GITHUB_SERVER_URL)
+			forkUrl.username = GITHUB_TOKEN
+			forkUrl.pathname = `${ FORK }/${ this.repo.name }.git`
 			await this.createFork()
-			await this.createRemote(forkUrl)
+			await this.createRemote(forkUrl.toString())
 
 		}
 	}
@@ -196,7 +202,7 @@ class Git {
 
 	async getBlobBase64Content(file) {
 		const fileRelativePath = path.join(this.workingDir, file)
-		const fileContent = await fs.promises.readFile(fileRelativePath)
+		const fileContent = await fs.readFile(fileRelativePath)
 
 		return fileContent.toString('base64')
 	}
@@ -226,7 +232,7 @@ class Git {
 	}
 
 	async commit(msg) {
-		let message = msg !== undefined ? msg : `${ COMMIT_PREFIX } Synced file(s) with ${ GITHUB_REPOSITORY }`
+		let message = msg !== undefined ? msg : `${ COMMIT_PREFIX } synced file(s) with ${ GITHUB_REPOSITORY }`
 		if (COMMIT_BODY) {
 			message += `\n\n${ COMMIT_BODY }`
 		}
@@ -419,7 +425,7 @@ class Git {
 
 	async createOrUpdatePr(changedFiles, title) {
 		const body = dedent(`
-			Synced local file(s) with [${ GITHUB_REPOSITORY }](https://github.com/${ GITHUB_REPOSITORY }).
+			synced local file(s) with [${ GITHUB_REPOSITORY }](${ GITHUB_SERVER_URL }/${ GITHUB_REPOSITORY }).
 
 			${ PR_BODY }
 
@@ -427,7 +433,7 @@ class Git {
 
 			---
 
-			This PR was created automatically by the [repo-file-sync-action](https://github.com/BetaHuhn/repo-file-sync-action) workflow run [#${ process.env.GITHUB_RUN_ID || 0 }](https://github.com/${ GITHUB_REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID || 0 })
+			This PR was created automatically by the [repo-file-sync-action](https://github.com/BetaHuhn/repo-file-sync-action) workflow run [#${ process.env.GITHUB_RUN_ID || 0 }](${ GITHUB_SERVER_URL }/${ GITHUB_REPOSITORY }/actions/runs/${ process.env.GITHUB_RUN_ID || 0 })
 		`)
 
 		if (this.existingPr) {
@@ -436,7 +442,7 @@ class Git {
 			const { data } = await this.github.pulls.update({
 				owner: this.repo.user,
 				repo: this.repo.name,
-				title: `${ COMMIT_PREFIX } Synced file(s) with ${ GITHUB_REPOSITORY }`,
+				title: `${ COMMIT_PREFIX } synced file(s) with ${ GITHUB_REPOSITORY }`,
 				pull_number: this.existingPr.number,
 				body: body
 			})
@@ -449,7 +455,7 @@ class Git {
 		const { data } = await this.github.pulls.create({
 			owner: this.repo.user,
 			repo: this.repo.name,
-			title: title === undefined ? `${ COMMIT_PREFIX } Synced file(s) with ${ GITHUB_REPOSITORY }` : title,
+			title: title === undefined ? `${ COMMIT_PREFIX } synced file(s) with ${ GITHUB_REPOSITORY }` : title,
 			body: body,
 			head: `${ FORK ? FORK : this.repo.user }:${ this.prBranch }`,
 			base: this.baseBranch
@@ -522,5 +528,3 @@ class Git {
 		this.lastCommitSha = request.data.sha
 	}
 }
-
-module.exports = Git

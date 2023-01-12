@@ -1,11 +1,12 @@
-const core = require('@actions/core')
-const fs = require('fs')
+import * as core from '@actions/core'
+import * as fs from 'fs'
 
-const Git = require('./git')
-const { forEach, dedent, addTrailingSlash, pathIsDirectory, copy, remove, arrayEquals } = require('./helpers')
+import Git from './git.js'
+import { forEach, dedent, addTrailingSlash, pathIsDirectory, copy, remove, arrayEquals } from './helpers.js'
+
+import { parseConfig, default as config } from './config.js'
 
 const {
-	parseConfig,
 	COMMIT_EACH_FILE,
 	COMMIT_PREFIX,
 	PR_LABELS,
@@ -20,9 +21,9 @@ const {
 	FORK,
 	REVIEWERS,
 	TEAM_REVIEWERS
-} = require('./config')
+} = config
 
-const run = async () => {
+async function run() {
 	// Reuse octokit for each repo
 	const git = new Git()
 
@@ -92,12 +93,12 @@ const run = async () => {
 
 					const message = {
 						true: {
-							commit: useOriginalCommitMessage ? git.originalCommitMessage() : `${ COMMIT_PREFIX } Synced local '${ file.dest }' with remote '${ file.source }'`,
-							pr: `Synced local ${ directory } <code>${ file.dest }</code> with remote ${ directory } <code>${ file.source }</code>`
+							commit: useOriginalCommitMessage ? git.originalCommitMessage() : `${ COMMIT_PREFIX } synced local '${ file.dest }' with remote '${ file.source }'`,
+							pr: `synced local ${ directory } <code>${ file.dest }</code> with remote ${ directory } <code>${ file.source }</code>`
 						},
 						false: {
-							commit: useOriginalCommitMessage ? git.originalCommitMessage() : `${ COMMIT_PREFIX } Created local '${ file.dest }' from remote '${ file.source }'`,
-							pr: `Created local ${ directory } <code>${ file.dest }</code> ${ otherFiles } from remote ${ directory } <code>${ file.source }</code>`
+							commit: useOriginalCommitMessage ? git.originalCommitMessage() : `${ COMMIT_PREFIX } created local '${ file.dest }' from remote '${ file.source }'`,
+							pr: `created local ${ directory } <code>${ file.dest }</code> ${ otherFiles } from remote ${ directory } <code>${ file.source }</code>`
 						}
 					}
 
@@ -216,7 +217,6 @@ const run = async () => {
 }
 
 run()
-	.then(() => {})
 	.catch((err) => {
 		core.setFailed(err.message)
 		core.debug(err)
